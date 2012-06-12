@@ -1,0 +1,25 @@
+# Visual Studio files
+
+*.suo
+*.user
+bin
+obj
+
+/src/packages/**/
+!/src/packages/repositories.config
+
+
+# Tools
+
+*.resharper
+_ReSharper*/
+[Tt]est[Rr]esult*
+
+*.ncrunchproject
+*.ncrunchsolution
+
+
+# Generic
+
+*.cache
+*.bak
