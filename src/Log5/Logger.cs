@@ -4,9 +4,23 @@
 
     public abstract class Logger : ILogger
     {
+
+        protected abstract void LogInternal(string logLine);
+
+        protected Logger()
+        {
+            LogFormatter = new LogFormatter();
+        }
+
         #region Implementation of ILogger
 
-        public abstract void Log(LogLevel logLevel, string msg);
+        public ILogFormatter LogFormatter { get; set; }
+
+        public void Log(LogLevel logLevel, string msg)
+        {
+            var logLine = LogFormatter.Format(DateTime.Now, logLevel, msg);
+            LogInternal(logLine);
+        }
 
         public void LogFormat(LogLevel logLevel, string msg, params object[] formatObjects)
         {
