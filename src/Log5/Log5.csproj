@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ILogFormatter.cs" />
+    <Compile Include="LogFormatter.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="ConsoleLogger.cs" />
     <Compile Include="FileLogger.cs" />

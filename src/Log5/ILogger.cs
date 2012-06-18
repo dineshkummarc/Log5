@@ -2,6 +2,8 @@
 {
     public interface ILogger
     {
+        ILogFormatter LogFormatter { get; set; }
+
         void Log(LogLevel logLevel, string msg);
         void LogFormat(LogLevel logLevel, string msg, params object[] formatObjects);
 

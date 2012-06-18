@@ -1,6 +1,5 @@
 ﻿namespace Log5
 {
-    using System;
     using System.Collections.Generic;
 
     public class MemoryLogger : Logger
@@ -15,11 +14,9 @@
         }
 
 
-        public override void Log(LogLevel logLevel, string msg)
+        protected override void LogInternal(string logLine)
         {
-            var dateString = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss fff");
-            var message = String.Format("[{0,-5} : {1}] {2}\n", dateString, logLevel, msg);
-            Messages.Add(message);
+            Messages.Add(logLine);
         }
 
     }

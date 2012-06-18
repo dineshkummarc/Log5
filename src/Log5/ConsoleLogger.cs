@@ -5,9 +5,9 @@
     public class ConsoleLogger : Logger
     {
 
-        public override void Log(LogLevel logLevel, string msg)
+        protected override void LogInternal(string logLine)
         {
-            Console.Write(String.Format("[{0} : {1}] {2}", DateTime.Now.ToLongTimeString(), logLevel, msg));
+            Console.Write(logLine);
         }
 
     }

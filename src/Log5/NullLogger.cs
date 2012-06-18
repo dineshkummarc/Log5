@@ -3,7 +3,7 @@
     public class NullLogger : Logger
     {
 
-        public override void Log(LogLevel logLevel, string msg)
+        protected override void LogInternal(string logLine)
         {
             // Do nothing
         }
