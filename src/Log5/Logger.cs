@@ -65,5 +65,7 @@
         }
 
         #endregion
+
+        public static readonly NullLogger Null = new NullLogger();
     }
 }
