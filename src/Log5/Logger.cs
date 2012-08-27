@@ -2,84 +2,107 @@
 {
     using System;
 
-    public abstract class Logger : ILogger
+    public abstract partial class Logger : ILogger
     {
-
-        protected abstract void LogInternal(string logLine);
+        protected readonly Guid Guid;
 
         protected Logger()
         {
-            LogFormatter = new LogFormatter();
+            Guid = Guid.NewGuid();
         }
 
-        #region Implementation of ILogger
 
-        public ILogFormatter LogFormatter { get; set; }
+        #region Overrides of Object
 
-        public void Log(LogLevel logLevel, string msg)
+        public override int GetHashCode()
         {
-            var logLine = LogFormatter.Format(DateTime.Now, logLevel, msg);
-            LogInternal(logLine);
-        }
-
-        public void LogFormat(LogLevel logLevel, string msg, params object[] formatObjects)
-        {
-            var formattedMsg = String.Format(msg, formatObjects);
-            Log(logLevel, formattedMsg);
-        }
-
-        public void Debug(string msg)
-        {
-            Log(LogLevel.Debug, msg);
-        }
-
-        public void DebugFormat(string msg, params object[] formatObjects)
-        {
-            LogFormat(LogLevel.Debug, msg, formatObjects);
-        }
-
-        public void Info(string msg)
-        {
-            Log(LogLevel.Info, msg);
-        }
-
-        public void InfoFormat(string msg, params object[] formatObjects)
-        {
-            LogFormat(LogLevel.Info, msg, formatObjects);
-        }
-
-        public void Warn(string msg)
-        {
-            Log(LogLevel.Warn, msg);
-        }
-
-        public void WarnFormat(string msg, params object[] formatObjects)
-        {
-            LogFormat(LogLevel.Warn, msg, formatObjects);
-        }
-
-        public void Error(string msg)
-        {
-            Log(LogLevel.Error, msg);
-        }
-
-        public void ErrorFormat(string msg, params object[] formatObjects)
-        {
-            LogFormat(LogLevel.Error, msg, formatObjects);
-        }
-
-        public void Fatal(string msg)
-        {
-            Log(LogLevel.Error, msg);
-        }
-
-        public void FatalFormat(string msg, params object[] formatObjects)
-        {
-            LogFormat(LogLevel.Fatal, msg, formatObjects);
+            return Guid.GetHashCode();
         }
 
         #endregion
 
-        public static readonly NullLogger Null = new NullLogger();
+
+        #region Implementation of ILogger
+
+        public virtual bool IsBulkLogger { get { return false; } }
+
+
+        public abstract void Log(LogEntry logEntry);
+
+
+        public void Log(LogLevel logLevel, string msg, params object[] args)
+        {
+            var entry = new LogEntry(logLevel, msg, args.Length == 0 ? null : args);
+            Log(entry);
+        }
+
+        public void LogFormat(LogLevel logLevel, string msg, params object[] args)
+        {
+            var entry = new LogEntry(logLevel, msg, args);
+            Log(entry);
+        }
+
+        public void Debug(string msg, params object[] args)
+        {
+            var entry = new LogEntry(LogLevel.Debug, msg, args.Length == 0 ? null : args);
+            Log(entry);
+        }
+
+        public void DebugFormat(string msg, params object[] args)
+        {
+            var entry = new LogEntry(LogLevel.Debug, msg, args);
+            Log(entry);
+        }
+
+        public void Info(string msg, params object[] args)
+        {
+            var entry = new LogEntry(LogLevel.Info, msg, args.Length == 0 ? null : args);
+            Log(entry);
+        }
+
+        public void InfoFormat(string msg, params object[] args)
+        {
+            var entry = new LogEntry(LogLevel.Info, msg, args);
+            Log(entry);
+        }
+
+        public void Warn(string msg, params object[] args)
+        {
+            var entry = new LogEntry(LogLevel.Warn, msg, args.Length == 0 ? null : args);
+            Log(entry);
+        }
+
+        public void WarnFormat(string msg, params object[] args)
+        {
+            var entry = new LogEntry(LogLevel.Warn, msg, args);
+            Log(entry);
+        }
+
+        public void Error(string msg, params object[] args)
+        {
+            var entry = new LogEntry(LogLevel.Error, msg, args.Length == 0 ? null : args);
+            Log(entry);
+        }
+
+        public void ErrorFormat(string msg, params object[] args)
+        {
+            var entry = new LogEntry(LogLevel.Warn, msg, args);
+            Log(entry);
+        }
+
+        public void Fatal(string msg, params object[] args)
+        {
+            var entry = new LogEntry(LogLevel.Debug, msg, args.Length == 0 ? null : args);
+            Log(entry);
+        }
+
+        public void FatalFormat(string msg, params object[] args)
+        {
+            var entry = new LogEntry(LogLevel.Fatal, msg, args);
+            Log(entry);
+        }
+
+        #endregion
+
     }
 }

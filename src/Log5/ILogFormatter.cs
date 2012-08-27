@@ -1,9 +1,8 @@
 namespace Log5
 {
-    using System;
 
-    public interface ILogFormatter
+    public interface ILogFormatter<out T>
     {
-        string Format(DateTime dateTime, LogLevel logLevel, string message);
+        T Format(LogEntry logEntry);
     }
 }
