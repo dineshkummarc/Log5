@@ -52,8 +52,8 @@
     <Compile Include="%28Loggers%29\LogBuffer.cs" />
     <Compile Include="%28Loggers%29\MailLogger.cs" />
     <Compile Include="BulkLogger.cs" />
+    <Compile Include="Internal\Helpers.cs" />
     <Compile Include="LogEntry.cs" />
-    <Compile Include="Helpers.cs" />
     <Compile Include="IBulkLogger.cs" />
     <Compile Include="ILogFormatter.cs" />
     <Compile Include="%28LogFormatter%29\SimpleLogFormatter.cs" />

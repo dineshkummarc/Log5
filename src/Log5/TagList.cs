@@ -5,6 +5,8 @@
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
 
+    using Internal;
+
     using Newtonsoft.Json;
 
 

@@ -70,7 +70,6 @@
 
 
         [TestCase(1)]
-
         public static void CombiningLogTest(int i)
         {
             var minimumWaitTime = new TimeSpan(10000);   // 1 millisecond

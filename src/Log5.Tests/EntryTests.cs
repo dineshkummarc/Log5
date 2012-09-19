@@ -16,7 +16,7 @@
             var entry = new LogEntry(level, msg, args);
             var dt = entry.DateTime;
             var dtstr = dt.ToString("yyyy-MM-ddTHH:mm:ss.FFFFFFFZ");
-            var expectedJson = String.Format("{{\"DateTime\":\"{0}\",\"LogLevel\":{1},\"Message\":\"{2}\",\"Args\":[],\"TagList\":[],\"AttachedObjects\":{{}}}}", dtstr, (int)level, msg);
+            var expectedJson = String.Format("{{\"DateTime\":\"{0}\",\"LogLevel\":{1},\"Message\":\"{2}\",\"TagList\":[],\"Parameters\":{{}},\"AttachedObjects\":{{}}}}", dtstr, (int)level, msg);
             var json = JsonConvert.SerializeObject(entry);
 
             Assert.AreEqual(expectedJson, json);
@@ -31,7 +31,7 @@
             entry.AttachObject("two", 2);
             var dt = entry.DateTime;
             var dtstr = dt.ToString("yyyy-MM-ddTHH:mm:ss.FFFFFFFZ");
-            var expectedJson = String.Format("{{\"DateTime\":\"{0}\",\"LogLevel\":{1},\"Message\":\"{2}\",\"Args\":[\"arg\"],\"TagList\":[\"tag\"],\"AttachedObjects\":{{\"two\":2}}}}", dtstr, (int) LogLevel.Debug, "DEBUG");
+            var expectedJson = String.Format("{{\"DateTime\":\"{0}\",\"LogLevel\":{1},\"Message\":\"{2}\",\"TagList\":[\"tag\"],\"Parameters\":{{\"0\":\"arg\"}},\"AttachedObjects\":{{\"two\":2}}}}", dtstr, (int)LogLevel.Debug, "DEBUG");
             var json = JsonConvert.SerializeObject(entry);
 
             Assert.AreEqual(expectedJson, json);

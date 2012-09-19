@@ -46,8 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AtFormatTests.cs" />
     <Compile Include="BufferLoggerTest.cs" />
     <Compile Include="EntryTests.cs" />
+    <Compile Include="LogEntryMessageStringTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TagListTests.cs" />
     <Compile Include="TemporaryTest.cs" />

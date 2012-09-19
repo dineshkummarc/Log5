@@ -12,7 +12,7 @@
             #region Default Properties
 
             public static readonly string DefaultDateFormat = "yyyy/MM/dd HH:mm:ss fff";
-            public static readonly string DefaultMessageFormat = "[{0} : {1, -5}] {2}\n";
+            public static readonly string DefaultMessageFormat = "[{0} : {1, -5}] {2}" + Environment.NewLine;
 
             #endregion
 
@@ -75,9 +75,7 @@
             {
                 var dateString = logEntry.DateTime.ToString(DateFormat);
 
-                string message = logEntry.Args != null
-                    ? String.Format(logEntry.Message, logEntry.Args)
-                    : logEntry.Message;
+                var message = logEntry.ToString();
 
                 return String.Format(MessageFormat, dateString, logEntry.LogLevel, message);
             }
