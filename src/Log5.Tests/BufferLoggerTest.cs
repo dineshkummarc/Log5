@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
 
     using NUnit.Framework;
-
+    
 
     [TestFixture]
     public static class BufferLoggerTest

@@ -1,7 +1,8 @@
 ﻿namespace Log5
 {
     using System;
-
+    using System.Text;
+    using System.Text.RegularExpressions;
 
     public static partial class LogFormatter
     {
@@ -9,12 +10,18 @@
         public class Simple : ILogFormatter<string>
         {
 
-            #region Default Properties
+            /// <summary>
+            /// This regular expression will match Windows, UNIX, or Mac newlines
+            /// Before printing, the log formatter will convert any newlines found
+            /// to <code>Environment.NewLine</code>
+            /// </summary>
+            private static readonly Regex ReNewLine = new Regex(@"(?:\r\n|\r|\n)");
 
+
+            /// <summary>
+            /// The default date format
+            /// </summary>
             public static readonly string DefaultDateFormat = "yyyy/MM/dd HH:mm:ss fff";
-            public static readonly string DefaultMessageFormat = "[{0} : {1, -5}] {2}" + Environment.NewLine;
-
-            #endregion
 
 
             /// <summary>
@@ -22,67 +29,62 @@
             /// the date in which the log was created
             /// </summary>
             public string DateFormat { get; set; }
-        
+
 
             /// <summary>
-            /// This is the value passed in to <code>String.Format</code> to format the log
-            /// message. It's paramaters are the date, the log level, and the message text
+            /// The time zone to print out the date in. Defaults to <code>TimeZone.CurrentTimeZone</code>
             /// </summary>
-            private string _messageFormat;
-            public string MessageFormat
-            {
-                get { return _messageFormat; }
-                set
-                {
-                    var oldFormat = _messageFormat;
-                    _messageFormat = value;
+            public TimeZone TimeZone { get; set; }
 
-                    // Check that this format string is valid
-                    try
-                    {
-                        var testEntry = LogEntry.Info("Log message test");
-                        Format(testEntry);
-                    }
-                    catch (ArgumentNullException)
-                    {
-                        _messageFormat = oldFormat;
-                    }
-                    catch (FormatException)
-                    {
-                        _messageFormat = oldFormat;
-                    }
-                }
-            }
 
+            /// <summary>
+            /// Create a simple log formatter
+            /// </summary>
             public Simple()
             {
                 DateFormat = DefaultDateFormat;
-
-                // We know this message format is valid, so skip the test
-                _messageFormat = DefaultMessageFormat;
+                TimeZone = TimeZone.CurrentTimeZone;
             }
 
-
-            public string Format(DateTime dateTime, LogLevel logLevel, string message)
-            {
-                var dateString = DateTime.Now.ToString(DateFormat);
-                return String.Format(MessageFormat, dateString, logLevel, message);
-            }
 
             #region Implementation of ILogFormatter<out string>
 
-            public string Format(LogEntry logEntry)
+            public virtual string Format(LogEntry logEntry)
             {
-                var dateString = logEntry.DateTime.ToString(DateFormat);
-
+                var dateString = TimeZone.ToLocalTime(logEntry.DateTime).ToString(DateFormat);
+                var prefix = PrefixString(dateString, logEntry.LogLevel, logEntry.TagList);
+                var continuation = ContinuationString(prefix, logEntry);
                 var message = logEntry.ToString();
 
-                return String.Format(MessageFormat, dateString, logEntry.LogLevel, message);
+                // Normalize newlines
+                message = ReNewLine.Replace(message, Environment.NewLine);
+                var messageLines = message.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+
+                var builder = new StringBuilder();
+
+                builder.Append(prefix);
+                builder.AppendLine(messageLines[0]);
+
+                for (var i = 1; i < messageLines.Length; i++)
+                {
+                    builder.Append(continuation);
+                    builder.AppendLine(messageLines[i]);
+                }
+
+                return builder.ToString();
+            }
+
+            protected virtual string PrefixString(string dateString, LogLevel logLevel, TagList tagList)
+            {
+                return String.Format("[{0} : {1, -5}] ", dateString, logLevel);
+            }
+
+            protected virtual string ContinuationString(string prefixString, LogEntry logEntry)
+            {
+                return new String(' ', prefixString.Length - 2) + "| ";
             }
 
             #endregion
         }
     }
-
-    
 }

@@ -13,7 +13,9 @@ obj
 
 *.resharper
 _ReSharper*/
+.nuget/
 [Tt]est[Rr]esult*
+nugetpkg
 
 *.ncrunchproject
 *.ncrunchsolution

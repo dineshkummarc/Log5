@@ -85,7 +85,7 @@
         /// <summary>
         /// Returns the number of tags
         /// </summary>
-        public long Length { get { return _dict.Count; } }
+        public long Length { get { return _list.Count; } }
 
 
 
@@ -386,7 +386,7 @@
         /// <code>true</code> if <paramref name="tag"/> is now present (it was added);
         /// returns <code>false</code> if it is not (it was removed).
         /// </summary>
-        /// <param name="tag">The tag to remove</param>
+        /// <param name="tag">The tag to toggle</param>
         /// <remarks>
         /// Throws an <code>ArgumentException</code> if <paramref name="tag"/> is empty or contains
         /// any whitespace characters
@@ -488,7 +488,6 @@
         }
 
         #endregion
-
 
 
         #region Implementation of IEnumerable<string>
