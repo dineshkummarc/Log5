@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
 
+    using Common;
+
 
     public partial class Logger
     {
@@ -31,14 +33,14 @@
 
             public Func<string, string> MessageFilter;
             public readonly TagList TagList;
-            public readonly Dictionary<string, object> AttachObjects;
+            public readonly Dictionary<string, Json> AttachObjects;
 
 
             public Intermediate(ILogger logger)
             {
                 Logger = logger;
                 TagList = new TagList();
-                AttachObjects = new Dictionary<string, object>();
+                AttachObjects = new Dictionary<string, Json>();
             }
 
 

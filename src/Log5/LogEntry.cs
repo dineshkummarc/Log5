@@ -8,6 +8,8 @@
 
     using Newtonsoft.Json;
 
+    using Json = Common.Json;
+
     /// <summary>
     /// Represents a single log entry
     /// </summary>
@@ -17,8 +19,8 @@
         private readonly LogLevel _logLevel;
         private readonly string _message;
         private readonly TagList _tagList;
-        private readonly Dictionary<string, object> _parameters;
-        private readonly Dictionary<string, object> _attachedObjects;
+        private readonly Dictionary<string, Json> _parameters;
+        private readonly Dictionary<string, Json> _attachments;
         private readonly bool _format;
 
 
@@ -28,45 +30,45 @@
         {
             _logLevel = logLevel;
             _message = message;
-            _parameters = null;
+            _parameters = new Dictionary<string, Json>();
             _dateTime = DateTime.UtcNow;
             _tagList = new TagList();
-            _attachedObjects = new Dictionary<string, object>();
+            _attachments = new Dictionary<string, Json>();
             _format = false;
         }
 
 
-        public LogEntry(LogLevel logLevel, string message, Dictionary<string, object> parameters)
+        public LogEntry(LogLevel logLevel, string message, Dictionary<string, Json> parameters)
         {
             _logLevel = logLevel;
             _message = message;
             _parameters = parameters;
             _dateTime = DateTime.UtcNow;
             _tagList = new TagList();
-            _attachedObjects = new Dictionary<string, object>();
+            _attachments = new Dictionary<string, Json>();
             _format = true;
         }
 
 
-        public LogEntry(LogLevel logLevel, string message, params object[] args) : this(logLevel, message, CreateParameters(args)) {}
+        public LogEntry(LogLevel logLevel, string message, params Json[] args) : this(logLevel, message, CreateParameters(args)) { }
 
 
         [JsonConstructor]
-        private LogEntry(LogLevel logLevel, DateTime dateTime, string message, TagList tagList, Dictionary<string, object> parameters, Dictionary<string, object> attachedObjects, bool format)
+        private LogEntry(LogLevel logLevel, DateTime dateTime, string message, TagList tagList, Dictionary<string, Json> parameters, Dictionary<string, Json> attachments, bool format)
         {
             _logLevel = logLevel;
             _dateTime = dateTime;
             _message = message;
             _tagList = tagList;
             _parameters = parameters;
-            _attachedObjects = attachedObjects;
+            _attachments = attachments;
             _format = format;
         }
 
 
-        public static LogEntry CreateRawEntry(LogLevel logLevel, DateTime dateTime, string message, string[] args, TagList tagList, Dictionary<string, object> attachedObjects, bool format)
+        public static LogEntry CreateRawEntry(LogLevel logLevel, DateTime dateTime, string message, string[] args, TagList tagList, Dictionary<string, Json> attachments, bool format)
         {
-            return new LogEntry(logLevel, dateTime, message, tagList, CreateParameters(args), attachedObjects, format);
+            return new LogEntry(logLevel, dateTime, message, tagList, CreateParameters(args), attachments, format);
         }
 
         protected static LogEntry Log(LogLevel logLevel, string message)
@@ -75,7 +77,7 @@
         }
 
 
-        protected static LogEntry LogFormat(LogLevel logLevel, string message, params object[] args)
+        protected static LogEntry LogFormat(LogLevel logLevel, string message, params Json[] args)
         {
             return new LogEntry(logLevel, message, args);
         }
@@ -87,13 +89,13 @@
         }
 
 
-        public static LogEntry Info(string message, params object[] args)
+        public static LogEntry Info(string message, params Json[] args)
         {
             return LogFormat(LogLevel.Info, message, args);
         }
 
 
-        public static LogEntry InfoFormat(string message, params object[] args)
+        public static LogEntry InfoFormat(string message, params Json[] args)
         {
             return LogFormat(LogLevel.Info, message, args);
         }
@@ -105,13 +107,13 @@
         }
 
 
-        public static LogEntry Debug(string message, params object[] args)
+        public static LogEntry Debug(string message, params Json[] args)
         {
             return LogFormat(LogLevel.Debug, message, args);
         }
 
 
-        public static LogEntry DebugFormat(string message, params object[] args)
+        public static LogEntry DebugFormat(string message, params Json[] args)
         {
             return LogFormat(LogLevel.Debug, message, args);
         }
@@ -123,13 +125,13 @@
         }
 
 
-        public static LogEntry Warn(string message, params object[] args)
+        public static LogEntry Warn(string message, params Json[] args)
         {
             return LogFormat(LogLevel.Warn, message, args);
         }
 
 
-        public static LogEntry WarnFormat(string message, params object[] args)
+        public static LogEntry WarnFormat(string message, params Json[] args)
         {
             return LogFormat(LogLevel.Warn, message, args);
         }
@@ -141,13 +143,13 @@
         }
 
 
-        public static LogEntry Error(string message, params object[] args)
+        public static LogEntry Error(string message, params Json[] args)
         {
             return LogFormat(LogLevel.Error, message, args);
         }
 
 
-        public static LogEntry ErrorFormat(string message, params object[] args)
+        public static LogEntry ErrorFormat(string message, params Json[] args)
         {
             return LogFormat(LogLevel.Error, message, args);
         }
@@ -159,13 +161,13 @@
         }
 
 
-        public static LogEntry Fatal(string message, params object[] args)
+        public static LogEntry Fatal(string message, params Json[] args)
         {
             return LogFormat(LogLevel.Fatal, message, args);
         }
 
 
-        public static LogEntry FatalFormat(string message, params object[] args)
+        public static LogEntry FatalFormat(string message, params Json[] args)
         {
             return LogFormat(LogLevel.Fatal, message, args);
         }
@@ -197,14 +199,14 @@
 
         #region Attached Object Operations
 
-        public LogEntry AttachObject(string key, Object obj)
+        public LogEntry AttachObject(string key, Json obj)
         {
-            if (_attachedObjects.ContainsKey(key))
+            if (_attachments.ContainsKey(key))
             {
                 throw new ArgumentException("An object with the key '" + key + "' already exists", "key");
             }
 
-            _attachedObjects[key] = obj;
+            _attachments[key] = obj;
 
             return this;
         }
@@ -218,8 +220,8 @@
         public LogLevel LogLevel { get { return _logLevel; } }
         public string Message { get { return _message; } }
         public TagList TagList { get { return _tagList; } }
-        public Dictionary<string, Object> Parameters { get { return _parameters; } } 
-        public Dictionary<string, Object> AttachedObjects { get { return _attachedObjects; } }
+        public Dictionary<string, Json> Parameters { get { return _parameters; } }
+        public Dictionary<string, Json> Attachments { get { return _attachments; } }
 
         #endregion
 
@@ -247,7 +249,7 @@
                    && _tagList.Equals(other._tagList)
                    && (_format == other._format || _parameters.Count != 0)
                    && Helpers.Equals(_parameters, other._parameters)
-                   && Helpers.Equals(_attachedObjects, other._attachedObjects);
+                   && Helpers.Equals(_attachments, other._attachments);
         }
 
         #endregion
@@ -269,9 +271,9 @@
 
         #region Helpers
 
-        private static Dictionary<string, object> CreateParameters(object[] args)
+        private static Dictionary<string, Json> CreateParameters(Json[] args)
         {
-            var dict = new Dictionary<string, object>();
+            var dict = new Dictionary<string, Json>();
 
             for (var i = 0; i < args.Length; i++)
             {
@@ -282,9 +284,9 @@
             return dict;
         }
 
-        private static Dictionary<string, object> CreateParameters(string[] args)
+        private static Dictionary<string, Json> CreateParameters(string[] args)
         {
-            var dict = new Dictionary<string, object>();
+            var dict = new Dictionary<string, Json>();
 
             for (var i = 0; i < args.Length; i++)
             {

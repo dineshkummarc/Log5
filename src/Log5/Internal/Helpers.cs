@@ -4,6 +4,8 @@ namespace Log5.Internal
     using System.Collections.Generic;
     using System.Text;
 
+    using Common;
+
     public static class Helpers
     {
 
@@ -109,13 +111,13 @@ namespace Log5.Internal
         }
 
 
-        public static string AtFormat(string format, Dictionary<string, object> dict)
+        public static string AtFormat(string format, IDictionary<string, Json> dict)
         {
             var builder = new StringBuilder();
 
             if (dict == null)
             {
-                dict = new Dictionary<string, object>();
+                dict = new Dictionary<string, Json>();
             }
 
             // x is the last position we have copied over to the string builder
@@ -213,7 +215,7 @@ namespace Log5.Internal
                             throw new FormatException("No parameter named '" + parameter + "'");
                         }
 
-                        builder.Append(dict[parameter]);
+                        builder.Append(dict[parameter].ToString());
 
                         i = k - 1;
                         x = k;

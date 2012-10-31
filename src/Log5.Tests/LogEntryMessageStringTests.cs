@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
 
+    using Common;
     using NUnit.Framework;
 
     public static class LogEntryMessageStringTests
@@ -15,7 +16,7 @@
             var entry = new LogEntry(
                 LogLevel.Error,
                 "This is a test message. Foo = @foo, Bar = @bar, Qux = @qux",
-                new Dictionary<string, object>
+                new Dictionary<string, Json>
                 {
                     { "foo", "FOO" },
                     { "bar", "BAR" },

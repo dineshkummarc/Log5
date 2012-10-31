@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
 
+    using Common;
+
     public abstract partial class Logger : ILogger
     {
         protected readonly Guid Guid;
@@ -44,25 +46,25 @@
             Log(entry);
         }
 
-        public void Log(LogLevel logLevel, string msg, params object[] args)
+        public void Log(LogLevel logLevel, string msg, params Json[] args)
         {
             var entry = new LogEntry(logLevel, msg, args);
             Log(entry);
         }
 
-        public void Log(LogLevel logLevel, string msg, Dictionary<string, object> parameters)
+        public void Log(LogLevel logLevel, string msg, Dictionary<string, Json> parameters)
         {
             var entry = new LogEntry(logLevel, msg, parameters);
             Log(entry);
         }
 
-        public void LogFormat(LogLevel logLevel, string msg, Dictionary<string, object> parameters)
+        public void LogFormat(LogLevel logLevel, string msg, Dictionary<string, Json> parameters)
         {
             var entry = new LogEntry(logLevel, msg, parameters);
             Log(entry);
         }
 
-        public void LogFormat(LogLevel logLevel, string msg, params object[] args)
+        public void LogFormat(LogLevel logLevel, string msg, params Json[] args)
         {
             var entry = new LogEntry(logLevel, msg, args);
             Log(entry);
@@ -78,22 +80,22 @@
             Log(LogLevel.Debug, msg);
         }
 
-        public void Debug(string msg, Dictionary<string, object> parameters)
+        public void Debug(string msg, Dictionary<string, Json> parameters)
         {
             LogFormat(LogLevel.Debug, msg, parameters);
         }
 
-        public void Debug(string msg, params object[] args)
+        public void Debug(string msg, params Json[] args)
         {
             LogFormat(LogLevel.Debug, msg, args);
         }
 
-        public void DebugFormat(string msg, Dictionary<string, object> parameters)
+        public void DebugFormat(string msg, Dictionary<string, Json> parameters)
         {
             LogFormat(LogLevel.Debug, msg, parameters);
         }
 
-        public void DebugFormat(string msg, params object[] args)
+        public void DebugFormat(string msg, params Json[] args)
         {
             LogFormat(LogLevel.Debug, msg, args);
         }
@@ -108,22 +110,22 @@
             Log(LogLevel.Info, msg);
         }
 
-        public void Info(string msg, Dictionary<string, object> parameters)
+        public void Info(string msg, Dictionary<string, Json> parameters)
         {
             LogFormat(LogLevel.Info, msg, parameters);
         }
 
-        public void Info(string msg, params object[] args)
+        public void Info(string msg, params Json[] args)
         {
             LogFormat(LogLevel.Info, msg, args);
         }
 
-        public void InfoFormat(string msg, Dictionary<string, object> parameters)
+        public void InfoFormat(string msg, Dictionary<string, Json> parameters)
         {
             LogFormat(LogLevel.Info, msg, parameters);
         }
 
-        public void InfoFormat(string msg, params object[] args)
+        public void InfoFormat(string msg, params Json[] args)
         {
             LogFormat(LogLevel.Info, msg, args);
         }
@@ -138,22 +140,22 @@
             Log(LogLevel.Warn, msg);
         }
 
-        public void Warn(string msg, Dictionary<string, object> parameters)
+        public void Warn(string msg, Dictionary<string, Json> parameters)
         {
             Log(LogLevel.Warn, msg, parameters);
         }
 
-        public void Warn(string msg, params object[] args)
+        public void Warn(string msg, params Json[] args)
         {
             Log(LogLevel.Warn, msg, args);
         }
 
-        public void WarnFormat(string msg, Dictionary<string, object> parameters)
+        public void WarnFormat(string msg, Dictionary<string, Json> parameters)
         {
             LogFormat(LogLevel.Warn, msg, parameters);
         }
 
-        public void WarnFormat(string msg, params object[] args)
+        public void WarnFormat(string msg, params Json[] args)
         {
             LogFormat(LogLevel.Warn, msg, args);
         }
@@ -168,22 +170,22 @@
             Log(LogLevel.Error, msg);
         }
 
-        public void Error(string msg, params object[] args)
+        public void Error(string msg, params Json[] args)
         {
             LogFormat(LogLevel.Error, msg, args);
         }
 
-        public void Error(string msg, Dictionary<string, object> parameters)
+        public void Error(string msg, Dictionary<string, Json> parameters)
         {
             LogFormat(LogLevel.Error, msg, parameters);
         }
 
-        public void ErrorFormat(string msg, params object[] args)
+        public void ErrorFormat(string msg, params Json[] args)
         {
             LogFormat(LogLevel.Error, msg, args);
         }
 
-        public void ErrorFormat(string msg, Dictionary<string, object> parameters)
+        public void ErrorFormat(string msg, Dictionary<string, Json> parameters)
         {
             LogFormat(LogLevel.Error, msg, parameters);
         }
@@ -198,22 +200,22 @@
             Log(LogLevel.Fatal, msg);
         }
 
-        public void Fatal(string msg, Dictionary<string, object> parameters)
+        public void Fatal(string msg, Dictionary<string, Json> parameters)
         {
             LogFormat(LogLevel.Fatal, msg, parameters);
         }
 
-        public void Fatal(string msg, params object[] args)
+        public void Fatal(string msg, params Json[] args)
         {
             LogFormat(LogLevel.Fatal, msg, args);
         }
 
-        public void FatalFormat(string msg, Dictionary<string, object> parameters)
+        public void FatalFormat(string msg, Dictionary<string, Json> parameters)
         {
             Log(LogLevel.Fatal, msg, parameters);
         }
 
-        public void FatalFormat(string msg, params object[] args)
+        public void FatalFormat(string msg, params Json[] args)
         {
             Log(LogLevel.Fatal, msg, args);
         }

@@ -2,9 +2,10 @@
 {
     using System.Collections.Generic;
 
-    using Internal;
-
+    using Common;
     using NUnit.Framework;
+
+    using Helpers = Internal.Helpers;
 
     public static class AtFormatTests
     {
@@ -28,7 +29,7 @@
         {
             var expectedString = "foo test bar";
             var formatString = "foo @xyz bar";
-            var dict = new Dictionary<string, object> { { "xyz", "test" } };
+            var dict = new Dictionary<string, Json> { { "xyz", "test" } };
             var resultString = Helpers.AtFormat(formatString, dict);
             Assert.AreEqual(expectedString, resultString);
         }
@@ -39,7 +40,7 @@
         {
             var expectedString = "foobar";
             var formatString = "@abc@def";
-            var dict = new Dictionary<string, object>
+            var dict = new Dictionary<string, Json>
             {
                 { "abc", "foo" },
                 { "def", "bar" }
@@ -54,7 +55,7 @@
         {
             var expectedString = "foodef";
             var formatString = "@{abc}def";
-            var dict = new Dictionary<string, object>
+            var dict = new Dictionary<string, Json>
             {
                 { "abc", "foo" }
             };
@@ -67,7 +68,7 @@
         {
             var expectedString = "foobar";
             var formatString = "@{abc}@{def}";
-            var dict = new Dictionary<string, object>
+            var dict = new Dictionary<string, Json>
             {
                 { "abc", "foo" },
                 { "def", "bar" }
