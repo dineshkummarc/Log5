@@ -77,5 +77,52 @@
             Assert.AreEqual(expectedString, resultString);
         }
 
+        [Test]
+        public static void PermissiveTest1()
+        {
+            var expectedString = "foo @v2 qux";
+            var formatString = "@v1 @v2 @v3";
+            var dict = new Dictionary<string, Json>
+            {
+                { "v1", "foo" },
+                { "V2", "bar" },
+                { "v3", "qux" },
+            };
+
+            var resultString = Helpers.AtFormat(formatString, dict, permissive: true);
+            Assert.AreEqual(expectedString, resultString);
+        }
+
+        [Test]
+        public static void PermissiveTest2()
+        {
+            var expectedString = "foo @{v2 @{v3}";
+            var formatString = "@{v1} @{v2 @{v3}";
+            var dict = new Dictionary<string, Json>
+            {
+                { "v1", "foo" },
+                { "v2", "bar" },
+                { "v3", "qux" },
+            };
+
+            var resultString = Helpers.AtFormat(formatString, dict, permissive: true);
+            Assert.AreEqual(expectedString, resultString);
+        }
+
+        [Test]
+        public static void PermissiveTest3()
+        {
+            var expectedString = "foo @{v2 @v3";
+            var formatString = "@{v1} @{v2 @v3";
+            var dict = new Dictionary<string, Json>
+            {
+                { "v1", "foo" },
+                { "v2", "bar" },
+                { "v3", "qux" },
+            };
+
+            var resultString = Helpers.AtFormat(formatString, dict, permissive: true);
+            Assert.AreEqual(expectedString, resultString);
+        }
     }
 }

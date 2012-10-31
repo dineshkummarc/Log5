@@ -9,6 +9,11 @@ obj
 !/src/packages/repositories.config
 
 
+# Output files
+
+/inst/
+
+
 # Tools
 
 *.resharper

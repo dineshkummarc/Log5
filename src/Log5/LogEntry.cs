@@ -264,7 +264,7 @@
                 return Message;
             }
 
-            return Helpers.AtFormat(Message, Parameters);
+            return Helpers.AtFormat(Message, Parameters, permissive: true);
         }
 
         #endregion

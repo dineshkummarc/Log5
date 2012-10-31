@@ -111,7 +111,7 @@ namespace Log5.Internal
         }
 
 
-        public static string AtFormat(string format, IDictionary<string, Json> dict)
+        public static string AtFormat(string format, IDictionary<string, Json> dict, bool permissive = false)
         {
             var builder = new StringBuilder();
 
@@ -174,7 +174,14 @@ namespace Log5.Internal
                                     case 'm':  case 'n':  case 'o':  case 'p':
                                     case 'q':  case 'r':  case 's':  case 't':
                                     case 'u':  case 'v':  case 'w':  case 'x':
-                                    case 'y':  case 'z':  case '0':  case '1':
+                                    case 'y':  case 'z':  
+                                    case 'A':  case 'B':  case 'C':  case 'D':
+                                    case 'E':  case 'F':  case 'G':  case 'H':
+                                    case 'I':  case 'J':  case 'K':  case 'L':
+                                    case 'M':  case 'N':  case 'O':  case 'P':
+                                    case 'Q':  case 'R':  case 'S':  case 'T':
+                                    case 'U':  case 'V':  case 'W':  case 'X':
+                                    case 'Y':  case 'Z':  case '0':  case '1':
                                     case '2':  case '3':  case '4':  case '5':
                                     case '6':  case '7':  case '8':  case '9':
                                         break;
@@ -189,36 +196,76 @@ namespace Log5.Internal
                         }
                         else
                         {
-                            for (; k < format.Length; k++)
+                            for (k++; k < format.Length; k++)
                             {
-                                if (format[k] == '}')
+                                switch (format[k])
                                 {
-                                    j++;
-                                    p2 = k++;
-                                    goto done;
+                                    case '}':
+                                        j++;
+                                        p2 = k++;
+                                        goto done;
+
+                                    case '{':
+                                    {
+                                        if (!permissive)
+                                        {
+                                            throw new FormatException(
+                                                String.Format(
+                                                    "Parameter group beginning at index {0} not closed properly",
+                                                    i
+                                                )
+                                            );
+                                        }
+
+                                        // Just return the rest
+
+                                        var parameter = format.Substring(j, k - j);
+                                        builder.Append("@");
+                                        builder.Append(parameter);
+                                        builder.Append(format.Substring(k));
+                                        return builder.ToString();
+                                    }
                                 }
                             }
 
-                            throw new FormatException(
-                                String.Format(
-                                    "Parameter group beginning at index {0} not closed",
-                                    i
-                                )
-                            );
+                            // End of string while looking for right curly brace
+
+                            if (!permissive)
+                            {
+                                throw new FormatException(
+                                    String.Format(
+                                        "Parameter group beginning at index {0} not closed properly",
+                                        i
+                                    )
+                                );
+                            }
+                            // Just return the rest
+                            builder.Append('@');
+                            builder.Append(format.Substring(j));
+                            return builder.ToString();
                         }
 
                         done:
-
-                        var parameter = format.Substring(j, p2 - j);
-                        if (!dict.ContainsKey(parameter))
                         {
-                            throw new FormatException("No parameter named '" + parameter + "'");
+                            var parameter = format.Substring(j, p2 - j);
+                            if (!dict.ContainsKey(parameter))
+                            {
+                                if (!permissive)
+                                {
+                                    throw new FormatException("No parameter named '" + parameter + "'");
+                                }
+
+                                builder.Append('@');
+                                builder.Append(parameter);
+                            }
+                            else
+                            {
+                                builder.Append(dict[parameter].ToString());
+                            }
+
+                            i = k - 1;
+                            x = k;
                         }
-
-                        builder.Append(dict[parameter].ToString());
-
-                        i = k - 1;
-                        x = k;
                     }
                     else
                     {
